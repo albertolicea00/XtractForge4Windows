@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XtractForge.Core", "XtractForge.Core\XtractForge.Core.csproj", "{1A6B2C3D-4E5F-6071-8293-A4B5C6D7E8F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XtractForge", "XtractForge\XtractForge.csproj", "{2B7C3D4E-5F60-7182-93A4-B5C6D7E8F901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XtractForge.Tests", "XtractForge.Tests\XtractForge.Tests.csproj", "{3C8D4E5F-6071-8293-A4B5-C6D7E8F90123}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A6B2C3D-4E5F-6071-8293-A4B5C6D7E8F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1A6B2C3D-4E5F-6071-8293-A4B5C6D7E8F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{1A6B2C3D-4E5F-6071-8293-A4B5C6D7E8F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{1A6B2C3D-4E5F-6071-8293-A4B5C6D7E8F9}.Release|x64.Build.0 = Release|Any CPU
+		{2B7C3D4E-5F60-7182-93A4-B5C6D7E8F901}.Debug|x64.ActiveCfg = Debug|x64
+		{2B7C3D4E-5F60-7182-93A4-B5C6D7E8F901}.Debug|x64.Build.0 = Debug|x64
+		{2B7C3D4E-5F60-7182-93A4-B5C6D7E8F901}.Release|x64.ActiveCfg = Release|x64
+		{2B7C3D4E-5F60-7182-93A4-B5C6D7E8F901}.Release|x64.Build.0 = Release|x64
+		{3C8D4E5F-6071-8293-A4B5-C6D7E8F90123}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3C8D4E5F-6071-8293-A4B5-C6D7E8F90123}.Debug|x64.Build.0 = Debug|Any CPU
+		{3C8D4E5F-6071-8293-A4B5-C6D7E8F90123}.Release|x64.ActiveCfg = Release|Any CPU
+		{3C8D4E5F-6071-8293-A4B5-C6D7E8F90123}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
