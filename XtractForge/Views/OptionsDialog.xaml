@@ -1,0 +1,14 @@
+<ContentDialog
+    x:Class="XtractForge.Views.OptionsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    PrimaryButtonText="Download"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnDownload"
+    CloseButtonClick="OnCancelled">
+
+    <ScrollViewer MaxHeight="420">
+        <StackPanel x:Name="FieldsPanel" Spacing="12" MinWidth="360" />
+    </ScrollViewer>
+</ContentDialog>

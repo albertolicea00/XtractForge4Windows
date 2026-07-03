@@ -33,6 +33,7 @@ public sealed class DownloadItem
     public Dictionary<string, string> ChosenPluginOptions { get; set; } = [];
     public string? ChosenFormatId { get; set; }
     public bool ChosenAudioOnly { get; set; }
+    public string ChosenAudioFormat { get; set; } = "mp3";
 
     public IDownloader? Downloader => DownloaderRegistry.ById(DownloaderId);
     public bool SupportsPause => Downloader?.SupportsResume ?? false;
@@ -121,7 +122,8 @@ public sealed class DownloadManager(Func<AppSettings> settingsProvider)
     // MARK: lifecycle
 
     public void Start(DownloadItem item, Dictionary<string, string> pluginOptions,
-                      string? formatId, bool audioOnly, bool resume = false)
+                      string? formatId, bool audioOnly, string audioFormat = "mp3",
+                      bool resume = false)
     {
         var downloader = item.Downloader;
         if (downloader is null) return;
@@ -130,6 +132,7 @@ public sealed class DownloadManager(Func<AppSettings> settingsProvider)
         item.ChosenPluginOptions = pluginOptions;
         item.ChosenFormatId = formatId;
         item.ChosenAudioOnly = audioOnly;
+        item.ChosenAudioFormat = audioFormat;
 
         var workFolder = settings.StageToTemp
             ? Staging.StagingDir(item.Url, settings.DownloadFolder)
@@ -152,6 +155,7 @@ public sealed class DownloadManager(Func<AppSettings> settingsProvider)
             DownloadFolder = workFolder,
             FormatId = formatId,
             AudioOnly = audioOnly,
+            AudioFormat = audioFormat,
             IsPlaylist = item.Info?.IsPlaylist ?? false,
             Resume = resume,
             PluginOptions = pluginOptions,
@@ -194,7 +198,8 @@ public sealed class DownloadManager(Func<AppSettings> settingsProvider)
     public void Resume(DownloadItem item)
     {
         if (item.State != DownloadState.Paused) return;
-        Start(item, item.ChosenPluginOptions, item.ChosenFormatId, item.ChosenAudioOnly, resume: true);
+        Start(item, item.ChosenPluginOptions, item.ChosenFormatId, item.ChosenAudioOnly,
+              item.ChosenAudioFormat, resume: true);
     }
 
     public void Cancel(DownloadItem item)
@@ -225,7 +230,7 @@ public sealed class DownloadManager(Func<AppSettings> settingsProvider)
             return;
         }
         Start(item, item.ChosenPluginOptions, item.ChosenFormatId, item.ChosenAudioOnly,
-              resume: item.SupportsPause);
+              item.ChosenAudioFormat, resume: item.SupportsPause);
     }
 
     public void Remove(DownloadItem item)

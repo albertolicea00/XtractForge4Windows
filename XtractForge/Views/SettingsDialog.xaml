@@ -1,0 +1,44 @@
+<ContentDialog
+    x:Class="XtractForge.Views.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Settings"
+    PrimaryButtonText="Save"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <ScrollViewer MaxHeight="480">
+        <StackPanel Spacing="16" MinWidth="420">
+
+            <!-- General -->
+            <TextBlock Text="General" Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="DownloadFolderBox" Header="Download folder" Grid.Column="0" />
+                <Button Content="Browse…" Grid.Column="1" VerticalAlignment="Bottom"
+                        Click="OnBrowseFolder" />
+            </Grid>
+            <TextBox x:Name="SpeedLimitBox" Header="Speed limit"
+                     PlaceholderText="50K, 10M (empty = unlimited)" />
+            <ToggleSwitch x:Name="StageToTempToggle" Header="Stage downloads in a temp folder" />
+            <ComboBox x:Name="OrganizeBox" Header="Organize downloads"
+                      HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Don't organize" Tag="None" />
+                <ComboBoxItem Content="By type (Video/Audio/Images)" Tag="Type" />
+                <ComboBoxItem Content="By source site" Tag="Source" />
+            </ComboBox>
+            <ToggleSwitch x:Name="WatchClipboardToggle"
+                          Header="Offer clipboard links when the window activates" />
+
+            <!-- Downloaders -->
+            <TextBlock Text="Downloaders" Style="{StaticResource BodyStrongTextBlockStyle}"
+                       Margin="0,8,0,0" />
+            <StackPanel x:Name="DownloadersPanel" Spacing="8" />
+
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>
