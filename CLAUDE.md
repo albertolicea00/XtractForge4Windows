@@ -42,30 +42,32 @@ a modal `ContentDialog` or flyout page, not a multi-tab shell like the old app.
 
 ## Project Layout
 
+Three projects. All download logic lives in `XtractForge.Core` (plain net8.0,
+ZERO Windows dependencies) so the tests run on any OS; the WinUI app project is
+a thin native shell over it.
+
 ```
 XtractForge.sln
-XtractForge/
-├── App.xaml(.cs)               # startup, theme bootstrap, single-instance guard
+XtractForge.Core/               # net8.0 class library — pure logic, fully testable
+├── Models/                     # Models.cs (MediaInfo, Command, OptionField, …), AppSettings.cs
+├── Downloaders/
+│   ├── IDownloader.cs          # interface + DownloaderBase + DownloaderRegistry (routing order)
+│   ├── YtDlp.cs, Lux.cs, GalleryDl.cs, SpotDl.cs, FFmpegTool.cs, Curl.cs
+└── Engine/
+    ├── DownloadManager.cs      # queue state + DownloadItem; raises plain .NET events
+    ├── ProcessRunner.cs        # spawn (ArgumentList, CreateNoWindow), stream lines, kill tree
+    ├── Staging.cs              # temp-dir staging + move-on-success + organize
+    └── Intake.cs               # pure URL extraction from dropped/pasted text
+XtractForge/                    # WinUI 3 app (net8.0-windows10.0.19041, unpackaged dev build)
+├── App.xaml(.cs)               # startup, single-instance redirect (AppInstance)
 ├── MainWindow.xaml(.cs)        # the one window: Mica, custom title bar, MenuBar
 ├── Views/
-│   ├── MainPage.xaml           # intake area + download queue list
-│   ├── DropZone.xaml           # drag & drop + paste affordance
-│   ├── DownloadRow.xaml        # per-item progress, pause/cancel, open in Explorer
-│   ├── OptionsDialog.xaml      # per-download options (format/quality) before queueing
-│   └── SettingsDialog.xaml     # General / Downloaders / Appearance
-├── ViewModels/                 # MainViewModel, DownloadItemViewModel, SettingsViewModel
-├── Downloaders/
-│   ├── IDownloader.cs          # the interface (below)
-│   ├── DownloaderRegistry.cs   # fixed array, routing order
-│   ├── YtDlp.cs, Lux.cs, GalleryDl.cs, SpotDl.cs, FFmpeg.cs, Curl.cs
-├── Engine/
-│   ├── DownloadManager.cs      # queue state, owns all download tasks
-│   ├── ProcessRunner.cs        # spawn, stream lines, kill (tree) on cancel
-│   ├── Staging.cs              # temp-dir staging + move-on-success + organize
-│   └── IntakeService.cs        # single entry point for every URL that enters the app
-├── Models/                     # DownloadItem, MediaInfo, ProgressUpdate, AppSettings
-└── Services/                   # SettingsService (JSON), ThemeService, NotificationService
-XtractForge.Tests/              # xUnit
+│   ├── MainPage.xaml(.cs)      # drop zone + clipboard InfoBar + queue ListView
+│   ├── OptionsDialog.xaml(.cs) # per-download options (dynamic fields, built in code)
+│   └── SettingsDialog.xaml(.cs)# General + per-downloader sections (Appearance = View menu)
+├── ViewModels/                 # MainViewModel, DownloadItemViewModel (DispatcherQueue marshalling)
+└── Services/                   # SettingsService (JSON), ThemeService, NotificationService, IntakeService
+XtractForge.Tests/              # xUnit against Core — runs on macOS/Linux too
 ```
 
 ## Downloader Interface (fixed, compiled-in)
@@ -89,8 +91,10 @@ public interface IDownloader
 **Routing** (`DownloaderRegistry.Route(url)`): first match wins, most specific first —
 `spotdl → gallery-dl → lux → ffmpeg → curl → yt-dlp`. yt-dlp's `CanHandle` always
 returns `true` (catch-all). Downloaders disabled in Settings are skipped.
-Port each downloader's URL matching, arg building, and progress-line regexes from
-`../old/src/plugins/*.ts` — that logic is battle-tested; translate it, don't reinvent it.
+Each downloader's URL matching, arg building, and progress-line regexes are ported
+from `../old/src/plugins/*.ts`. One deliberate deviation: lux no longer claims
+youtube.com/youtu.be/twitter/x/instagram — YouTube belongs to yt-dlp, and
+twitter/instagram were already captured by gallery-dl (which precedes lux).
 
 **Per-download options:** `MediaInfo` may carry an option schema (format/quality/audio-only
 etc., same idea as old `_downloadOptions`) rendered by `OptionsDialog`; simple sources set
